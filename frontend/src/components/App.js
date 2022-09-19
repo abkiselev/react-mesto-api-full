@@ -145,9 +145,10 @@ function App(props) {
         setSubmitButtonText("Вход...");
         
         apiAuth.login({ password, email })
-            .then(res => {
+        .then(res => {
+                console.log(res.token)
                 setLoggedIn(true)
-                localStorage.setItem('token', res.token);
+                localStorage.setItem('jwt', res.token);
                 setUserEmail(email)
                 props.history.push('/')
             })
@@ -158,8 +159,8 @@ function App(props) {
     }
 
     function checkToken(){
-        if (localStorage.getItem('token')){
-            const jwt = localStorage.getItem('token');
+        if (localStorage.getItem('jwt')){
+            const jwt = localStorage.getItem('jwt');
 
         apiAuth.checkToken(jwt)
             .then(res => {
