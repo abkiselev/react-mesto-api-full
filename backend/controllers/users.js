@@ -108,7 +108,7 @@ module.exports.updateUserAvatar = async (req, res, next) => {
       throw new NotFoundError('Пользователь по указанному _id не найден');
     }
 
-    return res.send({ avatar: user.avatar });
+    return res.send({ data: user });
   } catch (error) {
     if (error.kind === 'ObjectId') {
       return next(new BadRequestError('Неверный формат ID пользователя'));

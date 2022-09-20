@@ -12,6 +12,7 @@ class Api {
   }
 
   getInitialCards() {
+    this._headers.authorization = localStorage.getItem('jwt')
     return fetch(`${this._url}/cards`, {
       headers: this._headers
       })
@@ -40,6 +41,7 @@ class Api {
 
 
   getProfileInfo() {
+    this._headers.authorization = localStorage.getItem('jwt')
     return fetch(`${this._url}/users/me`, {
       headers: this._headers
       })
@@ -101,12 +103,12 @@ class Api {
     .then(res => this._getResponseData(res))
   }
 
-  checkToken(token) {
+  checkToken(jwt) {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
       headers: {
         ...this._headers,
-        "Authorization": `Bearer ${token}`
+        "authorization": jwt
       }
     })
     .then(res => this._getResponseData(res))
@@ -118,16 +120,16 @@ class Api {
 export const api = new Api({
   baseUrl: 'http://localhost:4000',
   headers: {
-    // authorization: 'a8aa5636-0a20-425d-9a78-90b6247fe762',
+    // authorization: localStorage.getItem('jwt'),
     'Content-Type': 'application/json'
   }
 });
 
-export const apiAuth = new Api({
-  baseUrl: 'http://localhost:4000',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
+// export const apiAuth = new Api({
+//   baseUrl: 'http://localhost:4000',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   }
+// });
 
 // export default api;

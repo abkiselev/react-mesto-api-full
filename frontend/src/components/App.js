@@ -46,8 +46,8 @@ function App(props) {
         if(loggedIn){
             Promise.all([api.getInitialCards(), api.getProfileInfo()])
                 .then(([cards, info]) => {
-                    setInitialCards(cards)
-                    setCurrentUser(info)
+                    setInitialCards(cards.data)
+                    setCurrentUser(info.data)
                 })
                 .catch(err => console.log(`${err.message}, Что-то пошло не так, попробуйте обновить страницу`));
         }
@@ -55,11 +55,11 @@ function App(props) {
 
 
     function handleCardLike(card) {
-        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        const isLiked = card.likes.some(i => i === currentUser._id);
         
         api.setCardLike(card._id, !isLiked ? 'PUT' : 'DELETE')
             .then((newCard) => {
-                setInitialCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+                setInitialCards((state) => state.map((c) => c._id === card._id ? newCard.data : c));
             })
             .catch(err => console.log(`${err.message}, Что-то пошло не так, попробуйте обновить страницу`));
     } 
@@ -85,7 +85,7 @@ function App(props) {
 
         api.createNewCard({name, link})
             .then(res => {
-                setInitialCards([res, ...cards]);
+                setInitialCards([res.data, ...cards]);
                 closeAllPopups();
             })
             .catch(err => console.log(`${err.message}, Что-то пошло не так, попробуйте обновить страницу`))
@@ -100,7 +100,7 @@ function App(props) {
 
         api.changeProfileInfo({name, about})
             .then(res => {
-                setCurrentUser(res);
+                setCurrentUser(res.data);
                 closeAllPopups();
             })
             .catch(err => console.log(`${err.message}, Что-то пошло не так, попробуйте обновить страницу`))
@@ -114,7 +114,7 @@ function App(props) {
 
         api.changeProfileAvatar({avatar})
             .then(res => {
-                setCurrentUser(res);
+                setCurrentUser(res.data);
                 closeAllPopups();
             })
             .catch(err => console.log(`${err.message}, Что-то пошло не так, попробуйте обновить страницу`))
@@ -126,7 +126,7 @@ function App(props) {
     function handleRegister({ password, email }) {
         setSubmitButtonText("Регистрация...");
         
-        apiAuth.register({ password, email })
+        api.register({ password, email })
             .then(res => {
                 setStatusRegister(true);
                 setRegistrationMessage('Вы успешно зарегистрировались!');
@@ -144,12 +144,11 @@ function App(props) {
     function handleLogin({ password, email }) {
         setSubmitButtonText("Вход...");
         
-        apiAuth.login({ password, email })
-        .then(res => {
-                console.log(res.token)
-                setLoggedIn(true)
+        api.login({ password, email })
+            .then(res => {
                 localStorage.setItem('jwt', res.token);
                 setUserEmail(email)
+                setLoggedIn(true)
                 props.history.push('/')
             })
             .catch(err => alert(`Что-то пошло не так, попробуйте заново`))
@@ -162,7 +161,7 @@ function App(props) {
         if (localStorage.getItem('jwt')){
             const jwt = localStorage.getItem('jwt');
 
-        apiAuth.checkToken(jwt)
+        api.checkToken(jwt)
             .then(res => {
                 setLoggedIn(true)
                 setUserEmail(res.data.email)
@@ -174,7 +173,7 @@ function App(props) {
 
     function signOut(){        
         setLoggedIn(false)
-        localStorage.removeItem('token');
+        localStorage.removeItem('jwt');
         props.history.push('/sign-in')       
     }
 
