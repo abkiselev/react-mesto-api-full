@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { urlRegExp } = require('../constants/regExp');
+const { isValidUserId } = require('../constants/validateMongoId');
 const {
   getUsers, getUser, getMe, updateUserInfo, updateUserAvatar,
 } = require('../controllers/users');
@@ -10,9 +11,7 @@ router.get('/', getUsers);
 router.get('/me', getMe);
 
 router.get('/:userId', celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
-  }).unknown(true),
+  params: Joi.object().keys(isValidUserId).unknown(true),
 }), getUser);
 
 router.patch('/me', celebrate({

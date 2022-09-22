@@ -46,6 +46,8 @@ function App(props) {
         if(loggedIn){
             Promise.all([api.getInitialCards(), api.getProfileInfo()])
                 .then(([cards, info]) => {
+                    console.log(cards)
+                    console.log(info.data)
                     setInitialCards(cards.data)
                     setCurrentUser(info.data)
                 })

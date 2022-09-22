@@ -118,18 +118,8 @@ class Api {
 
 
 export const api = new Api({
-  baseUrl: 'http://localhost:4000',
+  baseUrl: 'https://api.kiselev.nomoredomains.sbs',
   headers: {
-    // authorization: localStorage.getItem('jwt'),
     'Content-Type': 'application/json'
   }
 });
-
-// export const apiAuth = new Api({
-//   baseUrl: 'http://localhost:4000',
-//   headers: {
-//     'Content-Type': 'application/json'
-//   }
-// });
-
-// export default api;

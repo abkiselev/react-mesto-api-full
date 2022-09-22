@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { urlRegExp } = require('../constants/regExp');
+const { isValidCardId } = require('../constants/validateMongoId');
 const {
   getCards, createCard, deleteCard, likeCard, dislikeCard,
 } = require('../controllers/cards');
@@ -15,21 +16,15 @@ router.post('/', celebrate({
 }), createCard);
 
 router.delete('/:cardId', celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
-  }).unknown(true),
+  params: Joi.object().keys(isValidCardId).unknown(true),
 }), deleteCard);
 
 router.put('/:cardId/likes', celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
-  }).unknown(true),
+  params: Joi.object().keys(isValidCardId).unknown(true),
 }), likeCard);
 
 router.delete('/:cardId/likes', celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
-  }).unknown(true),
+  params: Joi.object().keys(isValidCardId).unknown(true),
 }), dislikeCard);
 
 module.exports = router;
